@@ -3,7 +3,7 @@ services:
     name: url-shortener-api
     env: node
     buildCommand: npm ci
-    startCommand: node src/index.js
+    startCommand: node index.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
