@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API
+  version: 1.0.0
+  description: API documentation for URL Shortener service
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+paths:
+  /auth/google:
+    post:
+      summary: Google Sign In
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Google ID token
+      responses:
+        200:
+          description: Successfully authenticated
+        401:
+          description: Authentication failed
+          
+  /shorten:
+    post:
+      summary: Create short URL
+      security:
+        - sessionAuth: []
+      tags: [URLs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                longUrl:
+                  type: string
+                  format: uri
+                topic:
+                  type: string
+                  enum: [acquisition, activation, retention]
+      responses:
+        201:
+          description: URL shortened successfully
+        401:
+          description: Authentication required
+          
+  /analytics/overall:
+    get:
+      summary: Get overall analytics
+      security:
+        - sessionAuth: []
+      tags: [Analytics]
+      responses:
+        200:
+          description: Analytics retrieved successfully
+        401:
+          description: Authentication required

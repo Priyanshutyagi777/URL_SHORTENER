@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: url-shortener-api
+    env: node
+    buildCommand: npm ci
+    startCommand: node src/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: MONGODB_URI
+        sync: false # Add this manually in Render dashboard
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false # Add this manually in Render dashboard
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: url-shortener-redis
+          property: connectionString
+
+  - type: redis
+    name: url-shortener-redis
+    ipAllowList: [] # Only allow internal connections
+    plan: free # Or choose a paid plan for production
+
+databases:
+  - name: url-shortener-mongodb
+    databaseName: url-shortener
+    user: url-shortener
+    plan: free # Or choose a paid plan for production
