@@ -1,6 +1,5 @@
 node_modules
 .git
 *.log
-.env
-.env.*
+
 dump.rdb
